@@ -1,0 +1,2 @@
+global slice admin_address;
+global int balance;

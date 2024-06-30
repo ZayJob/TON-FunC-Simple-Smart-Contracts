@@ -1,0 +1,2 @@
+const op::accept_funds = 0x61636365;
+const op::admin_withdraw = 0x61636364;

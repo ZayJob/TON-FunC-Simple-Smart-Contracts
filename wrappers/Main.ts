@@ -1,9 +1,14 @@
 import { Address, beginCell, Cell, Contract, contractAddress, ContractProvider, Sender, SendMode } from '@ton/core';
 
-export type MainConfig = {};
+export type MainConfig = {
+    admin: Address;
+};
 
 export function mainConfigToCell(config: MainConfig): Cell {
-    return beginCell().endCell();
+    return beginCell()
+        .storeInt(500000000, 32)
+        .storeAddress(config.admin)
+        .endCell();
 }
 
 export class Main implements Contract {
@@ -24,6 +29,26 @@ export class Main implements Contract {
             value,
             sendMode: SendMode.PAY_GAS_SEPARATELY,
             body: beginCell().endCell(),
+        });
+    }
+
+    async sendFunds(provider: ContractProvider, via: Sender, value: bigint) {
+        await provider.internal(via, {
+            value,
+            sendMode: SendMode.PAY_GAS_SEPARATELY,
+            body: beginCell()
+                .storeUint(0x61636365, 32)
+                .endCell(),
+        });
+    }
+
+    async sendWithdrawAdmin(provider: ContractProvider, via: Sender, value: bigint) {
+        await provider.internal(via, {
+            value,
+            sendMode: SendMode.PAY_GAS_SEPARATELY,
+            body: beginCell()
+                .storeUint(0x61636364, 32)
+                .endCell(),
         });
     }
 }
